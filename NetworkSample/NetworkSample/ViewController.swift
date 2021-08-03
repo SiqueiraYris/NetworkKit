@@ -11,8 +11,6 @@ final class ViewController: UIViewController {
 
     private func fetch() {
         service.request(SomeServiceRoute.prepare) { [weak self] response in
-            print(response)
-
             switch response {
             case .success(let result):
                 self?.presentAlert(title: "Success", message: "Response: \(result.object.someString)")
