@@ -1,5 +1,5 @@
 import Foundation
 
-struct SomeResponse: Decodable {
+struct SomeResponse: Decodable, Equatable {
     let someString: String
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ErrorHandler: LocalizedError {
+public struct ErrorHandler: LocalizedError, Equatable {
     var message: String
     public var errorCode: String?
     public var code: Int?

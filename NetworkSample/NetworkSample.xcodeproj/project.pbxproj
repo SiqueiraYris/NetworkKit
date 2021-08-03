@@ -19,6 +19,9 @@
 		5E0792D826B986C40056A850 /* SomeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0792D726B986C40056A850 /* SomeService.swift */; };
 		5E0792DA26B986DD0056A850 /* SomeServiceRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0792D926B986DD0056A850 /* SomeServiceRoute.swift */; };
 		5E0792DC26B986F60056A850 /* SomeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0792DB26B986F60056A850 /* SomeResponse.swift */; };
+		5EA50F5026B99FEE00990FE0 /* SomeResponse+Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA50F4E26B99FEE00990FE0 /* SomeResponse+Fixture.swift */; };
+		5EA50F5126B99FEE00990FE0 /* ViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA50F4F26B99FEE00990FE0 /* ViewControllerTests.swift */; };
+		5EA50F5426B9A3CE00990FE0 /* SomeServiceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EA50F5326B9A3CE00990FE0 /* SomeServiceSpy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +60,9 @@
 		5E0792D726B986C40056A850 /* SomeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomeService.swift; sourceTree = "<group>"; };
 		5E0792D926B986DD0056A850 /* SomeServiceRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomeServiceRoute.swift; sourceTree = "<group>"; };
 		5E0792DB26B986F60056A850 /* SomeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SomeResponse.swift; sourceTree = "<group>"; };
+		5EA50F4E26B99FEE00990FE0 /* SomeResponse+Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SomeResponse+Fixture.swift"; sourceTree = "<group>"; };
+		5EA50F4F26B99FEE00990FE0 /* ViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerTests.swift; sourceTree = "<group>"; };
+		5EA50F5326B9A3CE00990FE0 /* SomeServiceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SomeServiceSpy.swift; path = ../../../../../SomeServiceSpy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +131,7 @@
 		5E0792B626B893390056A850 /* NetworkSampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				5EA50F4C26B99FEE00990FE0 /* Service */,
 				5E0792B726B893390056A850 /* NetworkSampleTests.swift */,
 				5E0792B926B893390056A850 /* Info.plist */,
 			);
@@ -155,6 +162,32 @@
 				5E0792DB26B986F60056A850 /* SomeResponse.swift */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		5EA50F4C26B99FEE00990FE0 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				5EA50F5226B9A3C500990FE0 /* Spys */,
+				5EA50F4D26B99FEE00990FE0 /* Fixtures */,
+				5EA50F4F26B99FEE00990FE0 /* ViewControllerTests.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		5EA50F4D26B99FEE00990FE0 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				5EA50F4E26B99FEE00990FE0 /* SomeResponse+Fixture.swift */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
+		5EA50F5226B9A3C500990FE0 /* Spys */ = {
+			isa = PBXGroup;
+			children = (
+				5EA50F5326B9A3CE00990FE0 /* SomeServiceSpy.swift */,
+			);
+			path = Spys;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -303,6 +336,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5EA50F5426B9A3CE00990FE0 /* SomeServiceSpy.swift in Sources */,
+				5EA50F5126B99FEE00990FE0 /* ViewControllerTests.swift in Sources */,
+				5EA50F5026B99FEE00990FE0 /* SomeResponse+Fixture.swift in Sources */,
 				5E0792B826B893390056A850 /* NetworkSampleTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,10 +1,16 @@
 import UIKit
 
 final class ViewController: UIViewController {
+    var service: SomeServiceProtocol = SomeService()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        SomeService().request(SomeServiceRoute.prepare) { [weak self] response in
+        fetch()
+    }
+
+    private func fetch() {
+        service.request(SomeServiceRoute.prepare) { [weak self] response in
             print(response)
 
             switch response {
