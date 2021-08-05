@@ -18,7 +18,6 @@ final class ViewController: UIViewController {
             case .failure(let error):
                 self?.presentAlert(title: "Error", message: "Error: \(error.localizedDescription)")
             }
-
         }
     }
 

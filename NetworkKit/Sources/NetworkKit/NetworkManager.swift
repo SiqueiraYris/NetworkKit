@@ -1,14 +1,14 @@
 import Foundation
 
 public final class NetworkManager {
-    private let session: URLSession
+    private let session: URLSessionProtocol
     private var queue: DispatchQueue
-    private let decoder: JSONDecoder
+    private let decoder: JSONDecoderProtocol
 
     public init(queue: DispatchQueue = DispatchQueue.main,
                 networkServiceType: NSURLRequest.NetworkServiceType = .responsiveData,
-                session: URLSession = URLSession(configuration: .default),
-                decoder: JSONDecoder = JSONDecoder()) {
+                session: URLSessionProtocol = URLSession(configuration: .default),
+                decoder: JSONDecoderProtocol = JSONDecoder()) {
         self.session = session
         self.session.configuration.networkServiceType = networkServiceType
         self.queue = queue
@@ -58,7 +58,9 @@ extension NetworkManager: NetworkManagerProtocol {
 
         var objectHeader: H?
 
-        let task = session.dataTask(with: urlRequest) { data, response, error in
+        let task = session.dataTask(with: urlRequest) { [weak self] data, response, error in
+            guard let self = self else { return }
+
             self.queue.async {
                 do {
                     if let error = error {
@@ -77,7 +79,11 @@ extension NetworkManager: NetworkManagerProtocol {
                         }
 
                         let object = try self.decoder.decode(T.self, from: data.value)
-                        self.checkPrintDebugData(title: "Decoding", debug: config.debugMode, url: urlRequest.url?.absoluteString, data: data, curl: urlRequest.curlString)
+                        self.checkPrintDebugData(title: "Decoding",
+                                                 debug: config.debugMode,
+                                                 url: urlRequest.url?.absoluteString,
+                                                 data: data,
+                                                 curl: urlRequest.curlString)
                         completion(.success((object: object, header: objectHeader)))
                     } else {
                         throw NetworkErrors.unknownFailure
@@ -100,28 +106,24 @@ extension NetworkManager: NetworkManagerProtocol {
     private func decodeHeaderWith<H: Decodable>(object: H.Type, data: [AnyHashable: Any]) throws -> H? {
         return try? self.decoder.decode(H.self, from: JSONSerialization.data(withJSONObject: data))
     }
-
-    public func receive(on queue: DispatchQueue) -> Self {
-        self.queue = queue
-        return self
-    }
 }
 
 extension NetworkManager {
     private func checkPrintDebugData(title: String, debug: Bool, url: String?, data: Data?, curl: String?) {
-        #if DEBUG
         if debug {
-            self.printDebugData(title: title, url: url, data: data, curl: curl)
+            printDebugData(title: title, url: url, data: data, curl: curl)
         }
-        #endif
     }
 
     private func checkErrorCodeWith(_ error: Error) throws {
-        if error._code == NetworkErrors.connectionLost.code {
+        switch error._code {
+        case NetworkErrors.connectionLost.code:
             throw NetworkErrors.connectionLost
-        } else if error._code == NetworkErrors.notConnected.code {
+
+        case NetworkErrors.notConnected.code:
             throw NetworkErrors.notConnected
-        } else {
+
+        default:
             throw NetworkErrors.requestFailure
         }
     }
@@ -130,15 +132,15 @@ extension NetworkManager {
                                          data: Data?, error: R,
                                          config: RequestConfigProtocol,
                                          completion: @escaping (Result<T, ErrorHandler>) -> Void) where R: NetworkErrorsProtocol {
-        #if DEBUG
         if config.debugMode {
-            self.printDebugData(title: String(describing: R.self),
-                                url: urlRequest.url?.absoluteString,
-                                data: data,
-                                curl: urlRequest.curlString)
+            printDebugData(title: String(describing: R.self),
+                           url: urlRequest.url?.absoluteString,
+                           data: data,
+                           curl: urlRequest.curlString)
         }
-        #endif
-        completion(.failure(ErrorHandler(statusCode: error.code, data: data, defaultError: error)))
+        completion(.failure(ErrorHandler(statusCode: error.code,
+                                         data: data,
+                                         defaultError: error)))
     }
 }
 
