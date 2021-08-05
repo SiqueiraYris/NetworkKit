@@ -15,7 +15,7 @@ public final class RequestConfigHeadersDecorator {
 extension RequestConfigHeadersDecorator: NetworkRouteProtocol {
     public var config: RequestConfigProtocol {
 //        if let jwt = userManager.retrieveJWT() {
-            instance.headers["header"] = "some-header" /// you cand add jwt for example
+            instance.headers["header"] = "some-header" /// you can add jwt for example
 //        }
 
         return instance
