@@ -6,7 +6,6 @@ public protocol RequestConfigProtocol {
     var method: HTTPMethod { get }
     var parameters: [String: Any] { get set }
     var headers: [String: String] { get }
-    var dateDecodeStrategy: JSONDecoder.DateDecodingStrategy? { get }
     var parametersEncoding: ParameterEncoding { get }
     var debugMode: Bool { get }
 }

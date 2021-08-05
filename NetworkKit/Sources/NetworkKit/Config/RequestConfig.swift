@@ -6,7 +6,6 @@ public struct RequestConfig: RequestConfigProtocol {
     public var method: HTTPMethod
     public var parameters: [String: Any]
     public var headers: [String: String]
-    public var dateDecodeStrategy: JSONDecoder.DateDecodingStrategy?
     public var parametersEncoding: ParameterEncoding
     public var debugMode: Bool
 
@@ -16,14 +15,12 @@ public struct RequestConfig: RequestConfigProtocol {
                 encoding: ParameterEncoding = .url,
                 parameters: [String: Any] = [:],
                 headers: [String: String] = [:],
-                dateDecodeStrategy: JSONDecoder.DateDecodingStrategy? = nil,
                 debugMode: Bool = false) {
         self.host = host
         self.path = path
         self.method = method
         self.parameters = parameters
         self.headers = headers
-        self.dateDecodeStrategy = dateDecodeStrategy
         self.parametersEncoding = encoding
         self.debugMode = debugMode
     }
