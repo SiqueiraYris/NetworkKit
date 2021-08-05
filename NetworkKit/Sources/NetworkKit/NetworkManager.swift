@@ -70,10 +70,6 @@ extension NetworkManager: NetworkManagerProtocol {
                             throw NetworkErrors.noData
                         }
 
-                        if let dateDecodingStrategy = config.dateDecodeStrategy {
-                            self.decoder.dateDecodingStrategy = dateDecodingStrategy
-                        }
-
                         let object = try self.decoder.decode(T.self, from: data.value)
                         self.checkPrintDebugData(title: "Decoding",
                                                  debug: config.debugMode,
