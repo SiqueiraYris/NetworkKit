@@ -13,7 +13,7 @@ final class ViewController: UIViewController {
         service.request(SomeServiceRoute.prepare) { [weak self] response in
             switch response {
             case .success(let result):
-                self?.presentAlert(title: "Success", message: "Response: \(result.object.someString)")
+                self?.presentAlert(title: "Success", message: "Response: \(result.someString)")
 
             case .failure(let error):
                 self?.presentAlert(title: "Error", message: "Error: \(error.localizedDescription)")

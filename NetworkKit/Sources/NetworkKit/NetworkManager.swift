@@ -45,18 +45,16 @@ public final class NetworkManager {
 }
 
 extension NetworkManager: NetworkManagerProtocol {
-    public func request<T: Decodable, H: Decodable>(with config: RequestConfigProtocol,
-                                                    completion: @escaping (Result<(object: T, header: H?), ErrorHandler>) -> Void) {
+    public func request<T: Decodable>(with config: RequestConfigProtocol,
+                                      completion: @escaping (Result<(T), ErrorHandler>) -> Void) {
         networkRequest(with: config, completion: completion)
     }
 
-    private func networkRequest<T: Decodable, H: Decodable>(with config: RequestConfigProtocol, completion: @escaping (Result<(object: T, header: H?), ErrorHandler>) -> Void) {
+    private func networkRequest<T: Decodable>(with config: RequestConfigProtocol, completion: @escaping (Result<(T), ErrorHandler>) -> Void) {
         guard let urlRequest = config.createUrlRequest() else {
             completion(.failure(ErrorHandler(defaultError: NetworkErrors.malformedUrl)))
             return
         }
-
-        var objectHeader: H?
 
         let task = session.dataTask(with: urlRequest) { [weak self] data, response, error in
             guard let self = self else { return }
@@ -67,8 +65,6 @@ extension NetworkManager: NetworkManagerProtocol {
                         try self.checkErrorCodeWith(error)
                     } else if let response = response as? HTTPURLResponse {
                         try self.validateStatusCode(with: response.statusCode)
-
-                        objectHeader = try? self.decodeHeaderWith(object: H.self, data: response.allHeaderFields)
 
                         guard let data = data else {
                             throw NetworkErrors.noData
@@ -84,7 +80,7 @@ extension NetworkManager: NetworkManagerProtocol {
                                                  url: urlRequest.url?.absoluteString,
                                                  data: data,
                                                  curl: urlRequest.curlString)
-                        completion(.success((object: object, header: objectHeader)))
+                        completion(.success(object))
                     } else {
                         throw NetworkErrors.unknownFailure
                     }

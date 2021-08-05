@@ -6,24 +6,26 @@ class ViewControllerTests: XCTestCase {
 
     func test_init_shouldFetchDataWithSuccess() {
         let response = SomeResponse.fixture()
+        let result: SomeResult = .success(response)
         let (sut, service) = makeSUT()
 
         _ = sut.view
         service.completeWithSuccess(object: response)
 
-        XCTAssertEqual(service.receivedMessages, [.success(object: response, route: SomeServiceRoute.prepare)])
+        XCTAssertEqual(service.receivedMessages, [.request(result: result)])
+//        XCTAssertEqual(service.receivedMessages, [.success(object: response, route: SomeServiceRoute.prepare)])
     }
 
     func test_init_shouldNotFetchData() {
         let (sut, service) = makeSUT()
-        let error = ErrorHandler(statusCode: 500,
-                                 data: nil,
-                                 defaultError: .internalServerError)
+        let error = ErrorHandler.fixture()
+        let result: SomeResult = .failure(error)
 
         _ = sut.view
         service.completeWithError(error: error)
 
-        XCTAssertEqual(service.receivedMessages, [.failure(error: error, route: SomeServiceRoute.prepare)])
+        XCTAssertEqual(service.receivedMessages, [.request(result: result)])
+//        XCTAssertEqual(service.receivedMessages, [.failure(error: error, route: SomeServiceRoute.prepare)])
     }
 
     // MARK: - Helpers
