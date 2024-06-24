@@ -1,21 +1,25 @@
 import Foundation
 
 public protocol RequestConfigProtocol {
+    var scheme: String { get }
     var host: String { get }
     var path: String { get }
+    var port: Int? { get }
     var method: HTTPMethod { get }
     var parameters: [String: Any] { get set }
     var headers: [String: String] { get }
     var parametersEncoding: ParameterEncoding { get }
+    var headerInterceptor: NetworkHeaderInterceptor? { get set }
     var debugMode: Bool { get }
 }
 
 extension RequestConfigProtocol {
     func createUrlRequest() -> URLRequest? {
         var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
+        urlComponents.scheme = scheme
         urlComponents.host = host
         urlComponents.path = path
+        urlComponents.port = port
 
         guard let url = urlComponents.url else { return nil }
 

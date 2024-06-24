@@ -17,7 +17,7 @@ class SomeServiceTests: XCTestCase {
     
     func test_request_shouldReceiveFailure() {
         let (sut, manager) = makeSUT()
-        let error = ErrorHandler.fixture()
+        let error = ResponseError.fixture()
         let result: SomeResult = .failure(error)
         
         sut.request(SomeServiceRoute.prepare) { _ in }

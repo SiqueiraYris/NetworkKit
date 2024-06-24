@@ -16,7 +16,7 @@ final class SomeServiceSpy: SomeServiceProtocol {
         completionPassed?(.success(object))
     }
 
-    func completeWithError(error: ErrorHandler) {
+    func completeWithError(error: ResponseError) {
         completionPassed?(.failure(error))
     }
 

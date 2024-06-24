@@ -2,17 +2,20 @@ import Foundation
 
 public final class NetworkManager {
     private let session: URLSessionProtocol
-    private var queue: DispatchQueue
+    private let queue: DispatchQueueProtocol
     private let decoder: JSONDecoderProtocol
+    private let reachability: ReachabilityProtocol
 
-    public init(queue: DispatchQueue = DispatchQueue.main,
-                networkServiceType: NSURLRequest.NetworkServiceType = .responsiveData,
-                session: URLSessionProtocol = URLSession(configuration: .default),
-                decoder: JSONDecoderProtocol = JSONDecoder()) {
+    public init(session: URLSessionProtocol = URLSession(configuration: .default,
+                                                         delegate: NetworkPinner(),
+                                                         delegateQueue: nil),
+                queue: DispatchQueueProtocol = DispatchQueue.main,
+                decoder: JSONDecoderProtocol = JSONDecoder(),
+                reachability: ReachabilityProtocol = Reachability()) {
         self.session = session
-        self.session.configuration.networkServiceType = networkServiceType
         self.queue = queue
         self.decoder = decoder
+        self.reachability = reachability
     }
 
     private func validateStatusCode(with code: Int) throws {
@@ -46,13 +49,18 @@ public final class NetworkManager {
 
 extension NetworkManager: NetworkManagerProtocol {
     public func request<T: Decodable>(with config: RequestConfigProtocol,
-                                      completion: @escaping (Result<(T), ErrorHandler>) -> Void) {
+                                      completion: @escaping (Result<(T), ResponseError>) -> Void) {
         networkRequest(with: config, completion: completion)
     }
 
-    private func networkRequest<T: Decodable>(with config: RequestConfigProtocol, completion: @escaping (Result<(T), ErrorHandler>) -> Void) {
+    private func networkRequest<T: Decodable>(with config: RequestConfigProtocol, completion: @escaping (Result<(T), ResponseError>) -> Void) {
+        guard reachability.connection != .none else {
+            completion(.failure(ResponseError(defaultError: NetworkErrors.notConnected)))
+            return
+        }
+
         guard let urlRequest = config.createUrlRequest() else {
-            completion(.failure(ErrorHandler(defaultError: NetworkErrors.malformedUrl)))
+            completion(.failure(ResponseError(defaultError: NetworkErrors.malformedUrl)))
             return
         }
 
@@ -65,6 +73,8 @@ extension NetworkManager: NetworkManagerProtocol {
                         try self.checkErrorCodeWith(error)
                     } else if let response = response as? HTTPURLResponse {
                         try self.validateStatusCode(with: response.statusCode)
+
+                        config.headerInterceptor?.intercept(headers: response.allHeaderFields)
 
                         guard let data = data else {
                             throw NetworkErrors.noData
@@ -123,14 +133,14 @@ extension NetworkManager {
     private func genericCatchError<T, R>(urlRequest: URLRequest,
                                          data: Data?, error: R,
                                          config: RequestConfigProtocol,
-                                         completion: @escaping (Result<T, ErrorHandler>) -> Void) where R: NetworkErrorsProtocol {
+                                         completion: @escaping (Result<T, ResponseError>) -> Void) where R: NetworkErrorsProtocol {
         if config.debugMode {
             printDebugData(title: String(describing: R.self),
                            url: urlRequest.url?.absoluteString,
                            data: data,
                            curl: urlRequest.curlString)
         }
-        completion(.failure(ErrorHandler(statusCode: error.code,
+        completion(.failure(ResponseError(statusCode: error.code,
                                          data: data,
                                          defaultError: error)))
     }
@@ -141,7 +151,7 @@ extension NetworkManager {
     func printDebugData(title: String, url: String?, data: Data?, curl: String?) {
         print("---------------------------------------------------------------")
         print("🔬 - DEBUG MODE ON FOR: \(title) - 🔬")
-        print("📡 URL: \(url ?? "No URL passaed")")
+        print("📡 URL: \(url ?? "No URL passed")")
         print(data?.toString() ?? "No Data passed")
         print(curl ?? "No curl command passed")
         print("---------------------------------------------------------------")

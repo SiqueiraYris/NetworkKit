@@ -1,5 +1,3 @@
-import Foundation
-
 public enum HTTPMethod: String {
     case connect = "CONNECT"
     case delete = "DELETE"

@@ -14,11 +14,11 @@ final class NetworkManagerSpy: NetworkManagerProtocol {
         completionPassed?(result)
     }
 
-    func completeWithError(error: ErrorHandler) {
+    func completeWithError(error: ResponseError) {
         completionPassed?(.failure(error))
     }
 
-    func request<T>(with config: RequestConfigProtocol, completion: @escaping (Result<(T), ErrorHandler>) -> Void) where T : Decodable {
+    func request<T>(with config: RequestConfigProtocol, completion: @escaping (Result<(T), ResponseError>) -> Void) where T : Decodable {
         completionPassed = { [weak self] response in
             self?.receivedMessages.append(.request(result: response))
         }

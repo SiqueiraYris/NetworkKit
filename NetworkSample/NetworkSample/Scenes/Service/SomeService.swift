@@ -1,6 +1,6 @@
 import NetworkKit
 
-typealias SomeResult = (Result<(SomeResponse), ErrorHandler>)
+typealias SomeResult = (Result<(SomeResponse), ResponseError>)
 
 protocol SomeServiceProtocol: AnyObject {
     func request(_ route: SomeServiceRoute, completion: @escaping(SomeResult) -> Void)

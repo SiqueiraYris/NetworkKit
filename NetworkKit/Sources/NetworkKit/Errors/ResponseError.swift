@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ErrorHandler: LocalizedError, Equatable {
+public struct ResponseError: LocalizedError, Equatable {
     var message: String
     public var errorCode: String?
     public var code: Int?
@@ -27,7 +27,7 @@ public struct ErrorHandler: LocalizedError, Equatable {
 
     public init(statusCode: Int? = nil, data: Data? = nil, defaultError: NetworkErrors.HTTPErrors = .badRequest) {
         self.code = statusCode
-        self.message = defaultError.errorDescription ?? ErrorHandler.defaultErrorMessage
+        self.message = defaultError.errorDescription ?? ResponseError.defaultErrorMessage
 
         guard let data = data else { return }
 
@@ -37,13 +37,13 @@ public struct ErrorHandler: LocalizedError, Equatable {
             message = objectError.message
             errorCode = objectError.code
         } catch {
-            self.message = defaultError.errorDescription ?? ErrorHandler.defaultErrorMessage
+            self.message = defaultError.errorDescription ?? ResponseError.defaultErrorMessage
         }
     }
 
     public init(statusCode: Int? = nil, data: Data? = nil, defaultError: NetworkErrors = .decoderFailure) {
         self.code = statusCode
-        self.message = defaultError.errorDescription ?? ErrorHandler.defaultErrorMessage
+        self.message = defaultError.errorDescription ?? ResponseError.defaultErrorMessage
 
         guard let data = data else { return }
 
@@ -53,13 +53,13 @@ public struct ErrorHandler: LocalizedError, Equatable {
             message = objectError.message
             errorCode = objectError.code
         } catch {
-            self.message = defaultError.errorDescription ?? ErrorHandler.defaultErrorMessage
+            self.message = defaultError.errorDescription ?? ResponseError.defaultErrorMessage
         }
     }
 
     public init(statusCode: Int? = nil, data: Data? = nil, defaultError: NetworkErrorsProtocol = NetworkErrors.decoderFailure) {
         self.code = statusCode
-        self.message = defaultError.errorDescription ?? ErrorHandler.defaultErrorMessage
+        self.message = defaultError.errorDescription ?? ResponseError.defaultErrorMessage
 
         guard let data = data else { return }
 
@@ -69,7 +69,7 @@ public struct ErrorHandler: LocalizedError, Equatable {
             message = objectError.message
             errorCode = objectError.code
         } catch {
-            self.message = defaultError.errorDescription ?? ErrorHandler.defaultErrorMessage
+            self.message = defaultError.errorDescription ?? ResponseError.defaultErrorMessage
         }
     }
 

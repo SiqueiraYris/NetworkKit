@@ -18,7 +18,7 @@ class ViewControllerTests: XCTestCase {
 
     func test_init_shouldNotFetchData() {
         let (sut, service) = makeSUT()
-        let error = ErrorHandler.fixture()
+        let error = ResponseError.fixture()
         let result: SomeResult = .failure(error)
 
         _ = sut.view
